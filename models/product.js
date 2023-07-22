@@ -4,7 +4,7 @@ import mongoose, { Schema } from "mongoose";
 const newproduct = new Schema({
 
     title:String,
-    category:String,
+    color:String,
     price:Number,
 
 

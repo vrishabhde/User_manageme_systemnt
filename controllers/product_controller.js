@@ -1,24 +1,91 @@
-import product from "../models/product.js";
+import Products from "../models/product.js";
+import path from "path";
 
 
-export const addproduct = async (req,res) => {
-    try{
-            const {title, category, price} = req.body;
-            if(!title) return res.send("title is required")
-            if(!category) return res.send("category is required")
-            if(!price) return res.send("price is required");
-          
-            const response = await Users.find({ email }).exec();
-            let secretkey = 'vrushabh';
-            if (!response.length) return res.send("user not registered");
-            const decryptPassword = encrypt.decrypt(response[0].password, secretkey, 256);
-    
-            if (response[0].email == email && decryptPassword == password) {
-                return res.send("login successfully");
-            } else {
-                return res.send("credential wrong");
-            }
-    }catch(err){
+const __dirname = path.resolve();
+
+
+
+
+export const addproduct_html = async (req, res) => {
+    try {
+        res.sendFile(__dirname + '/public/html/addproduct.html')
+
+    } catch (err) {
+        return res.send(err)
+    }
+}
+
+
+
+export const addproduct = async (req, res) => {
+    try {
+        const { title, color, price } = req.body;
+
+        const product = new Products({
+            title, color, price
+        })
+        await product.save();
+        return res.send("product added successfully");
+
+    } catch (err) {
         return res.send(err);
     }
 }
+
+
+export const getproduct_html = async (req, res) => {
+    try {
+        res.sendFile(__dirname + '/public/html/getproduct.html')
+
+    } catch (err) {
+        return res.send(err)
+    }
+}
+
+
+
+export const getproduct = async (req, res) => {
+    try {
+        const { page } = req.body;
+       
+        let limit = 3;
+        let skip = (page - 1) * limit;
+        const allproduct = await Products.find({}).exec();
+        if(page > allproduct.length/limit) return res.send("products not found");
+        const getpagination = await Products.find({}).skip(skip).limit(limit).exec();
+        if (getpagination) {
+            return res.json({ total_products: allproduct.length, currentpage_product:getpagination.length, getpagination });
+        } else {
+            return res.send("products not found");
+        }
+
+    } catch (err) {
+        return res.send(err);
+    }
+}
+
+
+export const deleteproduct_html = async (req, res) => {
+    try {
+        res.sendFile(__dirname + '/public/html/deleteproduct.html')
+
+    } catch (err) {
+        return res.send(err)
+    }
+}
+
+export const deleteproduct = async (req, res) => {
+    try {
+        const { _id } = req.body;
+        if (!_id) return res.send("Id is require");
+
+        const delete_ptoduct = await Products.findByIdAndDelete({ _id }).exec();
+
+        return res.send("product removed successfully");
+
+    } catch (err) {
+        return res.send(err);
+    }
+}
+
