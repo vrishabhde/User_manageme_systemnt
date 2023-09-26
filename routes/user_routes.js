@@ -29,7 +29,7 @@ let job = new CronJob(' 0 */4 * * *', async () => {
         console.log("token generated");
         await new_token.save();
     }
-})
+})  
 job.start();
 
 

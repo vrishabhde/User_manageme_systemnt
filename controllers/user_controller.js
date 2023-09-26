@@ -7,6 +7,7 @@ import path from "path";
 
 const __dirname = path.resolve();
 
+
 export const home = async (req, res) => {
     try {
         res.sendFile(__dirname + '/public/html/home.html')
@@ -15,6 +16,7 @@ export const home = async (req, res) => {
         return res.send(err)
     }
 }
+
 
 export const register_html = async (req, res) => {
     try {
